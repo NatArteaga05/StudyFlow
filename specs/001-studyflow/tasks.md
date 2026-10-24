@@ -1,8 +1,8 @@
 # Tareas de implementación de StudyFlow
 
-Estado: **IMPLEMENTATION autorizada únicamente para T45 en la última autorización**. T1–T4 y T43–T45 están completadas; T5–T42 permanecen pendientes. La autorización para T45 no habilita otras tareas.
+Estado: **IMPLEMENTATION autorizada únicamente para T6 en la última autorización**. T1–T6 y T43–T45 están completadas; T7–T42 permanecen pendientes. La autorización para T6 no habilita otras tareas.
 
-Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias, no solo por el número del identificador: las adaptaciones T43–T45 indicadas tras T4 deben completarse antes de T5 y de las tareas funcionales que dependen de esas reglas. Para cada comportamiento nuevo, primero se escriben sus pruebas y después se implementa.
+Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias, no solo por el número del identificador: las adaptaciones T43–T45, listadas después de T42, deben completarse antes de T5 y de las tareas funcionales que dependen de esas reglas. Para cada comportamiento nuevo, primero se escriben sus pruebas y después se implementa.
 
 ## 1. Base del proyecto y dominio
 
@@ -34,27 +34,6 @@ Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias
   - **RF/CA relacionados:** RF-10, RF-16–RF-17, RF-23–RF-26; CA-08, CA-12–CA-15.
   - **Hecho cuando:** las pruebas cubren fecha válida/imposible, ayer, hoy, hoy+3, hoy+4, cambio de mes/año, estado completado y fecha local sin conversión UTC; además consultan la misma fecha de entrega con dos valores de «hoy» locales en meses/años distintos, verifican la reclasificación y que la fecha de entrega de entrada permanece idéntica.
 
-- [x] **T43 — Adaptar pruebas de validación de materias a grafemas y Unicode (25 min)**
-  - **Objetivo:** ampliar las pruebas históricas de T2 para fijar los límites aprobados de grafemas y la equivalencia con espacios en blanco Unicode exteriores.
-  - **Archivos/módulos:** `tests/unit/domain/subjects.test.ts`.
-  - **Dependencias:** T2, T3.
-  - **RF/CA relacionados:** RF-03–RF-04; CA-02.
-  - **Hecho cuando:** las pruebas nuevas verifican 100/101 grafemas (incluidos grafemas compuestos), nombre formado solo por Unicode `White_Space`, espacios Unicode exteriores, comparación que ignora caja pero distingue acentos y espacios interiores, y conservación del nombre original; las pruebas anteriores se mantienen.
-
-- [x] **T44 — Adaptar implementación de validación de materias (25 min)**
-  - **Objetivo:** ajustar la validación y clave de comparación de T3 a grafemas y Unicode `White_Space` sin cambiar el nombre presentado.
-  - **Archivos/módulos:** `studyflow/src/domain/subjects/validation.ts`, `studyflow/src/domain/subjects/types.ts`.
-  - **Dependencias:** T43.
-  - **RF/CA relacionados:** RF-03–RF-04; CA-02.
-  - **Hecho cuando:** pasan las pruebas de T2 y T43; el límite cuenta grafemas, la clave solo recorta espacios Unicode exteriores y normaliza mayúsculas, sin retirar acentos ni modificar espacios interiores o el texto original.
-
-- [x] **T45 — Adaptar pruebas de calendario gregoriano (20 min)**
-  - **Objetivo:** ampliar las pruebas de T4 con fechas bisiestas y reglas de años seculares.
-  - **Archivos/módulos:** `tests/unit/domain/due-dates.test.ts`.
-  - **Dependencias:** T4.
-  - **RF/CA relacionados:** RF-10; CA-04.
-  - **Hecho cuando:** las pruebas aceptan 29 de febrero de 2000, rechazan 29 de febrero de 1900 y comprueban al menos un año secular divisible por 400 y otro no divisible por 400; se conservan los casos ya escritos en T4.
-
 - [x] **T5 — Implementar funciones de fechas y vencimiento (25 min)**
   - **Objetivo:** implementar funciones puras de validación, fecha local y clasificación según T4.
   - **Archivos/módulos:** `studyflow/src/domain/dates/date-only.ts`, `studyflow/src/domain/dates/classify.ts`.
@@ -62,7 +41,7 @@ Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias
   - **RF/CA relacionados:** RF-10, RF-16–RF-17, RF-23–RF-26; CA-08, CA-12–CA-15.
   - **Hecho cuando:** pasan las pruebas T4 y T45; la validación aplica las reglas gregorianas seculares, y la clasificación se calcula al consultar sin guardarse como dato persistido.
 
-- [ ] **T6 — Escribir pruebas de validación de actividades (25 min)**
+- [x] **T6 — Escribir pruebas de validación de actividades (25 min)**
   - **Objetivo:** fijar validación de campos obligatorios, límite de grafemas, descripción opcional, tipos y estado inicial.
   - **Archivos/módulos:** `tests/unit/domain/activities.test.ts`.
   - **Dependencias:** T1, T5, T44.
@@ -326,6 +305,27 @@ Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias
   - **Dependencias:** T38–T41.
   - **RF/CA relacionados:** RF-01–RF-27; CA-01–CA-19.
   - **Hecho cuando:** cada criterio tiene resultado enlazado a una prueba o recorrido; los fallos se registran y ninguno fallido se declara conforme. No resolver DA-01–DA-03 por suposición.
+
+- [x] **T43 — Adaptar pruebas de validación de materias a grafemas y Unicode (25 min)**
+  - **Objetivo:** ampliar las pruebas históricas de T2 para fijar los límites aprobados de grafemas y la equivalencia con espacios en blanco Unicode exteriores.
+  - **Archivos/módulos:** `tests/unit/domain/subjects.test.ts`.
+  - **Dependencias:** T2, T3.
+  - **RF/CA relacionados:** RF-03–RF-04; CA-02.
+  - **Hecho cuando:** las pruebas nuevas verifican 100/101 grafemas (incluidos grafemas compuestos), nombre formado solo por Unicode `White_Space`, espacios Unicode exteriores, comparación que ignora caja pero distingue acentos y espacios interiores, y conservación del nombre original; las pruebas anteriores se mantienen.
+
+- [x] **T44 — Adaptar implementación de validación de materias (25 min)**
+  - **Objetivo:** ajustar la validación y clave de comparación de T3 a grafemas y Unicode `White_Space` sin cambiar el nombre presentado.
+  - **Archivos/módulos:** `studyflow/src/domain/subjects/validation.ts`, `studyflow/src/domain/subjects/types.ts`.
+  - **Dependencias:** T43.
+  - **RF/CA relacionados:** RF-03–RF-04; CA-02.
+  - **Hecho cuando:** pasan las pruebas de T2 y T43; el límite cuenta grafemas, la clave solo recorta espacios Unicode exteriores y normaliza mayúsculas, sin retirar acentos ni modificar espacios interiores o el texto original.
+
+- [x] **T45 — Adaptar pruebas de calendario gregoriano (20 min)**
+  - **Objetivo:** ampliar las pruebas de T4 con fechas bisiestas y reglas de años seculares.
+  - **Archivos/módulos:** `tests/unit/domain/due-dates.test.ts`.
+  - **Dependencias:** T4.
+  - **RF/CA relacionados:** RF-10; CA-04.
+  - **Hecho cuando:** las pruebas aceptan 29 de febrero de 2000, rechazan 29 de febrero de 1900 y comprueban al menos un año secular divisible por 400 y otro no divisible por 400; se conservan los casos ya escritos en T4.
 
 ## 5. Matriz de cobertura RF y CA
 
