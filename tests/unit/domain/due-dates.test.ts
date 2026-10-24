@@ -1,14 +1,23 @@
 import { describe, expect, it } from "vitest";
 
 async function loadDateFunctions() {
-  const dateOnlyPath = "../../../studyflow/src/domain/due-dates/date-only";
-  const classificationPath = "../../../studyflow/src/domain/due-dates/classify";
+  const dateOnlyPath = "../../../studyflow/src/domain/dates/date-only";
+  const classificationPath = "../../../studyflow/src/domain/dates/classify";
   const dateOnly = await import(/* @vite-ignore */ dateOnlyPath);
   const classification = await import(/* @vite-ignore */ classificationPath);
   return { ...dateOnly, ...classification };
 }
 
 describe("fechas calendario y vencimientos", () => {
+  it("aplica las reglas gregorianas de años seculares", async () => {
+    const { isValidDateOnly } = await loadDateFunctions();
+
+    expect(isValidDateOnly("2000-02-29")).toBe(true);
+    expect(isValidDateOnly("1900-02-29")).toBe(false);
+    expect(isValidDateOnly("2400-02-29")).toBe(true);
+    expect(isValidDateOnly("2100-02-29")).toBe(false);
+  });
+
   it("acepta fechas calendario válidas y rechaza fechas imposibles o con hora", async () => {
     const { isValidDateOnly } = await loadDateFunctions();
 

@@ -1,6 +1,6 @@
 # Tareas de implementación de StudyFlow
 
-Estado: **IMPLEMENTATION autorizada únicamente para T44 en la última autorización**. T1–T4 y T43–T44 están completadas; T5–T42 y T45 permanecen pendientes. La autorización para T44 no habilita otras tareas.
+Estado: **IMPLEMENTATION autorizada únicamente para T45 en la última autorización**. T1–T4 y T43–T45 están completadas; T5–T42 permanecen pendientes. La autorización para T45 no habilita otras tareas.
 
 Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias, no solo por el número del identificador: las adaptaciones T43–T45 indicadas tras T4 deben completarse antes de T5 y de las tareas funcionales que dependen de esas reglas. Para cada comportamiento nuevo, primero se escriben sus pruebas y después se implementa.
 
@@ -48,7 +48,7 @@ Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias
   - **RF/CA relacionados:** RF-03–RF-04; CA-02.
   - **Hecho cuando:** pasan las pruebas de T2 y T43; el límite cuenta grafemas, la clave solo recorta espacios Unicode exteriores y normaliza mayúsculas, sin retirar acentos ni modificar espacios interiores o el texto original.
 
-- [ ] **T45 — Adaptar pruebas de calendario gregoriano (20 min)**
+- [x] **T45 — Adaptar pruebas de calendario gregoriano (20 min)**
   - **Objetivo:** ampliar las pruebas de T4 con fechas bisiestas y reglas de años seculares.
   - **Archivos/módulos:** `tests/unit/domain/due-dates.test.ts`.
   - **Dependencias:** T4.
