@@ -48,7 +48,7 @@ Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias
   - **RF/CA relacionados:** RF-07–RF-11, RF-15–RF-17; CA-03–CA-05, CA-07–CA-08, CA-16.
   - **Hecho cuando:** las pruebas cubren campos requeridos, título vacío/de solo espacios, 100/101 grafemas, descripción ausente/vacía/solo Unicode `White_Space`, contenido largo conservado, materia existente, tipos permitidos, títulos repetidos y estado pendiente inicial.
 
-- [ ] **T7 — Implementar validación de actividades (20 min)**
+- [x] **T7 — Implementar validación de actividades (20 min)**
   - **Objetivo:** implementar tipos y validadores de actividad, incluido el conteo de grafemas y el tratamiento de descripciones omitidas, definidos por T6.
   - **Archivos/módulos:** `studyflow/src/domain/activities/types.ts`, `studyflow/src/domain/activities/validation.ts`.
   - **Dependencias:** T6.
