@@ -1,6 +1,6 @@
 # Aclaraciones del MVP de StudyFlow
 
-Estado: fase de preguntas cerrada por instrucción del usuario. Especificación redactada en `spec.md`, con las ambigüedades restantes señaladas como `[NECESITA ACLARACIÓN]`.
+Estado: ronda inicial de preguntas cerrada. Las decisiones posteriores de la revisión QA están registradas al final y aprobadas por el usuario; DA-01, DA-02 y DA-03 permanecen abiertas en `spec.md`.
 
 La fuente inicial del alcance es la solicitud del usuario en esta conversación. Las respuestas posteriores se registrarán aquí antes de incorporarlas a `spec.md`.
 
@@ -124,6 +124,24 @@ Respuesta: «solo nombre».
 
 Decisión confirmada: una materia tendrá únicamente un nombre obligatorio como dato de negocio.
 
-## Cierre de la fase de preguntas
+## Cierre de la ronda inicial de preguntas
 
-El usuario indicó que no se hagan más preguntas y que se redacte la especificación con las decisiones disponibles. Las ambigüedades restantes se registran en la sección «Dudas abiertas» de `spec.md` con la marca `[NECESITA ACLARACIÓN]`. No se incorporan como requisitos resueltos.
+El usuario indicó que no se hicieran más preguntas durante la ronda inicial. Las dudas pendientes de esa especificación se conservaron en la sección «Dudas abiertas» de `spec.md`; no se incorporaron entonces como requisitos resueltos.
+
+## Aclaraciones posteriores a la revisión QA
+
+El usuario aprobó estas decisiones para incorporarlas a `spec.md`:
+
+1. Los límites de 100 caracteres para nombres de materias y títulos de actividades se cuentan en grafemas Unicode.
+2. La comparación de nombres de materias ignora los espacios en blanco Unicode exteriores, además de mayúsculas/minúsculas; conserva acentos y espacios interiores.
+3. El filtro de vencimiento ofrece «Todos», «Vencidas», «Próximas a vencer» y «Posteriores a tres días». «Todos» desactiva el filtro de vencimiento. Las actividades completadas no pertenecen a las categorías de vencimiento.
+4. Los títulos se ordenan según el alfabeto español, ignorando mayúsculas y distinguiendo acentos.
+5. La validez de fechas sigue el calendario gregoriano, incluidas las reglas para años seculares.
+6. Las descripciones vacías o compuestas solo por espacios en blanco Unicode se tratan como omitidas. Las descripciones con contenido se conservan sin límite adicional de longitud.
+7. Si falla una validación, se informa que la operación no se guardó y se conservan los datos anteriores. Si falla el almacenamiento, se informa que la operación no pudo confirmarse o completarse, sin detalles técnicos ni garantías sobre un estado no verificado.
+
+Estas aclaraciones no resuelven DA-01 (recuperación automática de errores locales), DA-02 (presentación y accesibilidad) ni DA-03 (volumen y rendimiento).
+
+### Sustitución de decisiones históricas sobre acceso y almacenamiento
+
+Las decisiones históricas de las secciones 2 a 7 que autorizaban recuperar datos desde otros dispositivos, guardar datos en línea, usar una cuenta personal, iniciar sesión con correo y contraseña y restablecer la contraseña mediante un enlace quedan sustituidas por la decisión vigente aprobada posteriormente: StudyFlow no tendrá cuentas ni autenticación; conservará los datos localmente en IndexedDB y no sincronizará datos entre dispositivos. Se conservan las respuestas y decisiones históricas anteriores como registro, pero no describen el alcance vigente del MVP.

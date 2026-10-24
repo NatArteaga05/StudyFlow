@@ -21,17 +21,17 @@ No habrá cuentas, autenticación, contraseñas, recuperación de acceso, sincro
 
 ### Materia
 
-El único dato de negocio de una materia es su **nombre obligatorio**. Se permite registrar y consultar materias; no se pueden editar ni eliminar.
+El único dato de negocio de una materia es su **nombre obligatorio**, de hasta 100 grafemas Unicode. No puede estar vacío ni compuesto únicamente por espacios en blanco Unicode; los nombres equivalentes según RF-04 no se pueden registrar dos veces. Se permite registrar y consultar materias; no se pueden editar ni eliminar.
 
 ### Actividad académica
 
 | Dato | Definición |
 | --- | --- |
-| Título | Obligatorio. Se permiten títulos repetidos. |
+| Título | Obligatorio. Máximo 100 grafemas Unicode. Se permiten títulos repetidos. |
 | Tipo | Obligatorio: tarea, trabajo o examen. |
 | Materia | Obligatoria: una materia registrada. |
 | Fecha de entrega | Obligatoria: día, mes y año, sin hora. Se admiten fechas anteriores a hoy. |
-| Descripción | Opcional. |
+| Descripción | Opcional. Si se omite, está vacía o contiene únicamente espacios en blanco Unicode, se trata como omitida. No tiene un límite adicional de longitud; el contenido se conserva. |
 | Estado | Pendiente o completada. Toda actividad nueva comienza pendiente. |
 
 Dos actividades con el mismo título son independientes.
@@ -74,18 +74,18 @@ Los datos se guardan en el almacenamiento local del navegador y están disponibl
 ### Materias
 
 - **RF-03:** Cuando el estudiante registre una materia con nombre válido, el sistema deberá guardarla con ese nombre como único dato de negocio.
-- **RF-04:** Si el estudiante intenta registrar una materia cuyo nombre está vacío, contiene únicamente espacios, supera los 100 caracteres o es equivalente a otro nombre existente al ignorar mayúsculas, minúsculas y espacios exteriores, el sistema deberá impedir su registro.
+- **RF-04:** Si el estudiante intenta registrar una materia cuyo nombre está vacío, contiene únicamente espacios en blanco Unicode, supera los 100 grafemas Unicode o es equivalente a otro nombre existente al ignorar mayúsculas/minúsculas y los espacios en blanco Unicode exteriores, el sistema deberá impedir su registro e informar que no se guardó. La comparación conservará los acentos y los espacios interiores como significativos.
 - **RF-05:** Cuando el estudiante consulte sus materias, el sistema deberá mostrar las materias registradas.
 - **RF-06:** El sistema deberá ofrecer registro y consulta de materias, sin operaciones para editarlas o eliminarlas.
 
 ### Actividades
 
-- **RF-07:** Cuando el estudiante cree una actividad con título, tipo, materia registrada y fecha de entrega válidos, el sistema deberá guardarla con esos datos y con la descripción si fue proporcionada.
-- **RF-08:** Si falta un dato obligatorio de una creación o edición de actividad, el título está vacío, contiene únicamente espacios o supera los 100 caracteres, el sistema deberá impedir que se guarde la operación incompleta o inválida.
+- **RF-07:** Cuando el estudiante cree una actividad con título, tipo, materia registrada y fecha de entrega válidos, el sistema deberá guardarla con esos datos y con la descripción si fue proporcionada. Si la descripción se omite, está vacía o contiene únicamente espacios en blanco Unicode, el sistema deberá tratarla como omitida; las descripciones con contenido se conservarán sin un límite adicional de longitud.
+- **RF-08:** Si falta un dato obligatorio de una creación o edición de actividad, el título está vacío, contiene únicamente espacios o supera los 100 grafemas Unicode, el sistema deberá impedir que se guarde la operación incompleta o inválida. Cuando el sistema rechace una creación o edición por cualquier validación de los RF-08 a RF-10, deberá informar que la operación no se guardó; si se trata de una edición, deberá conservar sin cambios los datos previamente guardados.
 - **RF-09:** Si el tipo de actividad es distinto de tarea, trabajo o examen, el sistema deberá impedir que se guarde ese valor.
-- **RF-10:** Si la fecha de entrega no corresponde a una fecha calendario válida, el sistema deberá impedir que se guarde ese valor.
+- **RF-10:** Si la fecha de entrega no corresponde a una fecha válida del calendario gregoriano, incluidas sus reglas para años seculares, el sistema deberá impedir que se guarde ese valor.
 - **RF-11:** Cuando el estudiante cree una actividad con título igual al de otra, el sistema deberá permitir guardarla como una actividad independiente.
-- **RF-12:** Cuando el estudiante guarde cambios válidos en el título, tipo, materia, fecha de entrega o descripción, el sistema deberá actualizar la actividad seleccionada.
+- **RF-12:** Cuando el estudiante guarde cambios válidos en el título, tipo, materia, fecha de entrega o descripción, el sistema deberá actualizar la actividad seleccionada. La descripción se tratará conforme a RF-07.
 - **RF-13:** Cuando el estudiante confirme la eliminación de una actividad, el sistema deberá quitarla de las actividades conservadas; si cancela la confirmación, el sistema deberá conservarla. El sistema no ofrecerá una función para deshacer la eliminación.
 - **RF-14:** Cuando el estudiante marque una actividad como completada, el sistema deberá conservarla con estado completada.
 - **RF-15:** Cuando el estudiante cree una actividad, el sistema deberá asignarle el estado pendiente; cuando el estudiante marque una actividad como pendiente, el sistema deberá conservarla con ese estado.
@@ -97,13 +97,13 @@ Los datos se guardan en el almacenamiento local del navegador y están disponibl
 - **RF-18:** Cuando el estudiante consulte sus actividades, el sistema deberá mostrar las actividades registradas y permitir consultar sus datos y estado.
 - **RF-19:** Cuando el estudiante filtre por materia, el sistema deberá mostrar únicamente actividades asociadas a la materia seleccionada.
 - **RF-20:** Cuando el estudiante filtre por estado, el sistema deberá mostrar únicamente actividades con el estado seleccionado.
-- **RF-21:** Cuando el estudiante aplique filtros por materia, estado o vencimiento, el sistema deberá combinar los filtros activos y mostrar únicamente las actividades que cumplan todos ellos.
-- **RF-22:** Cuando el estudiante consulte la lista de actividades, el sistema deberá ordenarla por fecha de entrega ascendente, título en orden alfabético ascendente y, si ambos coinciden, identificador estable en orden ascendente.
+- **RF-21:** Cuando el estudiante aplique filtros por materia, estado o vencimiento, el sistema deberá combinar los filtros activos y mostrar únicamente las actividades que cumplan todos ellos. El filtro de vencimiento ofrecerá «Todos», que lo desactiva, y las categorías «Vencidas», «Próximas a vencer» y «Posteriores a tres días». Las actividades completadas no pertenecen a esas categorías; si se combinan con una de ellas, el resultado podrá estar vacío.
+- **RF-22:** Cuando el estudiante consulte la lista de actividades, el sistema deberá ordenarla por fecha de entrega ascendente, luego por título en orden alfabético español ascendente, ignorando mayúsculas y distinguiendo acentos y, si la comparación de título empata, por identificador estable en orden ascendente.
 - **RF-23:** Mientras una actividad esté pendiente y su fecha de entrega sea anterior a hoy, el sistema deberá identificarla como vencida.
 - **RF-24:** Mientras una actividad esté pendiente y su fecha de entrega esté entre hoy y hoy más 3 días calendario, incluidos ambos extremos, el sistema deberá identificarla como próxima a vencer.
 - **RF-25:** Mientras una actividad esté completada, el sistema deberá conservar su fecha de entrega y excluirla de las clasificaciones vencida y próxima a vencer.
 - **RF-26:** Cuando el sistema determine vencimientos, deberá usar la fecha local del dispositivo/navegador donde se utiliza StudyFlow.
-- **RF-27:** Si una operación de almacenamiento local falla, el sistema deberá mostrar un mensaje claro y no deberá sobrescribir ni eliminar intencionalmente datos existentes como respuesta al error.
+- **RF-27:** Si una operación de almacenamiento local falla, el sistema deberá informar que la operación no pudo confirmarse o completarse, sin mostrar detalles técnicos ni garantizar un estado de persistencia que no haya verificado. Como respuesta al error, no deberá sobrescribir ni eliminar intencionalmente datos existentes.
 
 ## 6. Criterios de aceptación verificables
 
@@ -112,23 +112,23 @@ Estos criterios describen verificaciones futuras; no se ejecutaron pruebas de c�
 | ID | Escenario y resultado esperado | Requisitos |
 | --- | --- | --- |
 | CA-01 | Tras registrar materias y actividades, cerrar y volver a abrir StudyFlow en el mismo perfil/origen, los datos guardados siguen disponibles mientras el almacenamiento del sitio no se haya borrado. | RF-01, RF-02 |
-| CA-02 | Registrar una materia de hasta 100 caracteres permite consultarla; nombre vacío, de solo espacios, de más de 100 caracteres o equivalente a otro nombre al ignorar mayúsculas/minúsculas y espacios exteriores se rechaza. No se ofrecen operaciones para editarla ni eliminarla. | RF-03 a RF-06 |
-| CA-03 | Se guardan actividades de los tres tipos permitidos, asociadas a una materia existente, con descripción opcional. | RF-07, RF-09 |
-| CA-04 | Crear o editar una actividad con campos obligatorios ausentes, título vacío/de solo espacios/de más de 100 caracteres, tipo no permitido o fecha imposible, como 31 de abril, no guarda esa operación. | RF-08 a RF-10 |
+| CA-02 | Registrar una materia de hasta 100 grafemas Unicode permite consultarla; nombre vacío, compuesto solo por espacios en blanco Unicode, de más de 100 grafemas o equivalente tras ignorar mayúsculas/minúsculas y espacios en blanco Unicode exteriores se rechaza e informa que no se guardó. Los acentos y espacios interiores siguen siendo significativos. No se ofrecen operaciones para editarla ni eliminarla. | RF-03 a RF-06 |
+| CA-03 | Se guardan actividades de los tres tipos permitidos, asociadas a una materia existente. Una descripción se puede omitir, dejar vacía o componer solo por espacios en blanco Unicode sin impedir el guardado; una descripción con contenido se conserva y no está sujeta a un límite adicional de longitud. | RF-07, RF-09 |
+| CA-04 | Crear o editar una actividad con campos obligatorios ausentes, título vacío/de solo espacios/de más de 100 grafemas, tipo no permitido o fecha gregoriana imposible (por ejemplo, 31 de abril) no guarda la operación e informa que no se guardó. El 29 de febrero de 2000 es válido y el 29 de febrero de 1900 no. Si falla la validación de una edición, los datos previamente guardados permanecen sin cambios. | RF-08 a RF-10 |
 | CA-05 | Dos actividades con el mismo título se conservan independientemente; editar o eliminar una no cambia la otra. | RF-11 a RF-13 |
 | CA-06 | Cambiar los campos editables y consultar de nuevo muestra los cambios; al confirmar la eliminación la actividad deja de aparecer y no se ofrece deshacer; al cancelar permanece. | RF-12, RF-13 |
 | CA-07 | Una actividad nueva se guarda con estado pendiente; puede pasar a completada y volver a pendiente, y el estado elegido se conserva entre usos en el mismo navegador. | RF-01, RF-14, RF-15 |
 | CA-08 | Se admite una fecha de entrega anterior a hoy y la fecha se presenta sin hora. | RF-16, RF-17 |
 | CA-09 | Con actividades de distintas materias y estados, los filtros por materia y estado muestran únicamente las coincidencias correspondientes. | RF-18 a RF-20 |
-| CA-10 | El filtro de vencimiento distingue pendientes vencidas, próximas y posteriores al plazo de 3 días; las actividades completadas no se clasifican como vencidas ni próximas. | RF-21, RF-23 a RF-25 |
-| CA-11 | Una lista con fechas distintas se ordena por fecha ascendente; los empates se ordenan por título ascendente y los empates restantes por identificador estable ascendente. | RF-22 |
-| CA-12 | Usando como hoy el 10 de mayo de 2026, una actividad pendiente del día 9 está vencida; las de los días 10, 11, 12 y 13 están próximas; la del día 14 no pertenece a ninguna de esas categorías. | RF-23, RF-24, RF-26 |
+| CA-10 | El filtro de vencimiento ofrece «Todos», «Vencidas», «Próximas a vencer» y «Posteriores a tres días». «Todos» no restringe por vencimiento. Las actividades completadas no pertenecen a las categorías de vencimiento. | RF-21, RF-23 a RF-25 |
+| CA-11 | Una lista se ordena por fecha ascendente; los empates se ordenan según el alfabeto español, ignorando mayúsculas y distinguiendo acentos; los empates restantes según esa comparación se ordenan por identificador estable ascendente. | RF-22 |
+| CA-12 | Usando como hoy el 10 de mayo de 2026, una actividad pendiente del día 9 está vencida; las de los días 10, 11, 12 y 13 están próximas; la del día 14 pertenece a «Posteriores a tres días», por lo que no está «Vencida» ni «Próxima a vencer». | RF-23, RF-24, RF-26 |
 | CA-13 | Una actividad pendiente con entrega hoy permanece vigente durante ese día; al día siguiente, si sigue pendiente, aparece vencida. | RF-23, RF-24, RF-26 |
 | CA-14 | Una actividad completada con fecha pasada o próxima conserva la fecha y no se clasifica como vencida ni próxima. Al volverla pendiente se aplica la clasificación correspondiente. | RF-14, RF-15, RF-23 a RF-25 |
 | CA-15 | Si cambia la fecha local del mismo dispositivo, la fecha de entrega guardada no cambia y su clasificación corresponde a la nueva fecha local. | RF-17, RF-26 |
-| CA-16 | Un título de actividad de exactamente 100 caracteres se acepta; uno de más de 100, vacío o compuesto solo por espacios se rechaza. Títulos repetidos siguen admitidos. | RF-08, RF-11 |
-| CA-17 | Aplicar a la vez filtros por materia, estado y vencimiento devuelve solo actividades que satisfacen todos los filtros activos. | RF-19 a RF-21 |
-| CA-18 | Si el guardado local falla, StudyFlow informa claramente que no se completó y no borra ni reemplaza intencionalmente los datos ya guardados. | RF-27 |
+| CA-16 | Un título de actividad de exactamente 100 grafemas Unicode se acepta; uno de más de 100, vacío o compuesto solo por espacios se rechaza. Títulos repetidos siguen admitidos. | RF-08, RF-11 |
+| CA-17 | Aplicar a la vez filtros por materia, estado y vencimiento devuelve solo actividades que satisfacen todos los filtros activos. «Todos» desactiva únicamente el filtro de vencimiento; combinar «Completada» con una categoría de vencimiento devuelve una lista vacía. | RF-19 a RF-21 |
+| CA-18 | Si el almacenamiento local falla, StudyFlow informa que la operación no pudo confirmarse o completarse, sin detalles técnicos ni garantía sobre un estado no verificado; tampoco informa éxito ni borra o reemplaza intencionalmente datos existentes como respuesta al error. | RF-27 |
 | CA-19 | La aplicación puede utilizarse en versiones actuales de Chrome, Edge y Firefox de escritorio. | RNF-01 |
 
 No se exige que otro navegador, perfil o dispositivo comparta los datos locales.
@@ -146,17 +146,21 @@ No se exige que otro navegador, perfil o dispositivo comparta los datos locales.
 | No hay materias | La lista está vacía; no se puede crear una actividad sin una materia registrada. La presentación del estado vacío no está definida. |
 | No hay actividades o el filtro no encuentra coincidencias | No hay elementos coincidentes. No se define una presentación específica del estado vacío. |
 | Títulos de actividad repetidos | Permitidos; cada actividad se gestiona independientemente. |
-| Nombres de materia equivalentes tras ignorar mayúsculas/minúsculas y espacios exteriores | El segundo registro se rechaza; los espacios interiores y acentos no se eliminan ni se equiparan por esta regla. |
-| Descripción omitida | No impide guardar la actividad. |
-| Campo obligatorio ausente, nombre vacío/de solo espacios o de más de 100 caracteres, tipo no permitido o fecha inexistente | Se rechaza el guardado. |
+| Nombres de materia equivalentes tras ignorar mayúsculas/minúsculas y espacios en blanco Unicode exteriores | El segundo registro se rechaza; los espacios interiores y acentos no se eliminan ni se equiparan por esta regla. |
+| Nombre de materia vacío o compuesto solo por espacios en blanco Unicode | Se rechaza el registro; el límite de 100 se cuenta en grafemas Unicode. |
+| Título de actividad vacío o compuesto solo por espacios | Se rechaza el guardado; el límite de 100 se cuenta en grafemas Unicode. |
+| Descripción omitida, vacía o compuesta solo por espacios en blanco Unicode | Se trata como omitida; el contenido de una descripción con texto se conserva y no tiene límite adicional. |
+| Campo obligatorio ausente, materia o título inválido, tipo no permitido o fecha gregoriana imposible | Se rechaza el guardado y se informa que la operación no se guardó; una edición inválida conserva los datos anteriores. |
 | Entrega hoy o exactamente dentro de tres días | Si está pendiente, se considera próxima a vencer. |
 | Entrega dentro de cuatro días | No se considera vencida ni próxima. |
-| Cambio de mes, año o año bisiesto | Se usan fechas calendario válidas y el umbral de tres días cruza el cambio normalmente. |
+| Cambio de mes, año o año bisiesto | Se usa el calendario gregoriano y el umbral de tres días cruza el cambio normalmente; 2000 es bisiesto y 1900 no. |
 | Actividad completada con fecha pasada o próxima | Conserva la fecha y queda fuera de vencida/próxima. |
 | Actividad completada pasa a pendiente | Se reclasifica según su fecha y el día local actual. |
 | Cambia la fecha de entrega | Se recalcula su clasificación sin cambiar el estado. |
 | Almacenamiento local borrado por usuario/navegador | No se garantiza recuperación; el MVP no sincroniza ni almacena copia remota. |
-| Almacenamiento no disponible, lleno o con error | Se informa claramente y no se confirma un guardado fallido. La recuperación automática queda abierta en DA-01. |
+| Almacenamiento no disponible, lleno o con error | Se informa que la operación no pudo confirmarse o completarse, sin detalles técnicos ni garantía sobre un estado no verificado. La recuperación automática queda abierta en DA-01. |
+| Combinación del filtro de vencimiento con estado completado | Las actividades completadas quedan fuera de las categorías de vencimiento; al aplicar una categoría junto con «Completada», la lista queda vacía. «Todos» desactiva el filtro de vencimiento. |
+| Orden de títulos con mayúsculas o acentos | Se usa orden alfabético español, sin distinguir mayúsculas y distinguiendo acentos; si la comparación empata, se aplica el identificador estable. |
 | Confirmación de borrado cancelada | La actividad permanece intacta; no existe deshacer después de confirmar el borrado. |
 
 ## 9. Fuera de alcance
@@ -189,6 +193,6 @@ No se exige que otro navegador, perfil o dispositivo comparta los datos locales.
 
 La fase de preguntas está cerrada; estas dudas se registran sin reabrirla. No se presuponen requisitos para resolverlas.
 
-- **DA-01 — Recuperación de errores locales. [NECESITA ACLARACIÓN]** Está aprobado mostrar un mensaje claro y no sobrescribir ni eliminar intencionalmente datos existentes. No se ha definido una recuperación automática ante cuota agotada o almacenamiento local corrupto; no se garantiza restauración tras borrar los datos del sitio.
+- **DA-01 — Recuperación de errores locales. [NECESITA ACLARACIÓN]** Está definido cómo informar que una operación local no pudo confirmarse o completarse; no se ha definido una recuperación automática ante cuota agotada o almacenamiento local corrupto. No se garantiza restauración tras borrar los datos del sitio.
 - **DA-02 — Presentación y accesibilidad. [NECESITA ACLARACIÓN]** No se especificaron idioma de interfaz, accesibilidad concreta, estados vacíos ni formato visual de fechas. La compatibilidad aprobada se limita a versiones actuales de Chrome, Edge y Firefox de escritorio.
 - **DA-03 — Volumen y rendimiento. [NECESITA ACLARACIÓN]** No se establecieron volúmenes esperados ni umbrales de rendimiento. El listado del MVP no tendrá paginación.
