@@ -63,11 +63,17 @@ Los cambios de comportamiento comienzan por la SPEC. Las dudas abiertas no se co
 │       ├── plan.md                 # Diseño técnico
 │       └── tasks.md                # Desglose y estado de implementación
 ├── studyflow/
-│   ├── src/                        # Aplicación React y lógica de dominio actual
+│   ├── src/
+│   │   ├── App.tsx                  # Punto de entrada actual de la interfaz
+│   │   └── domain/
+│   │       ├── activities/          # Tipos y validación de actividades
+│   │       ├── dates/               # Fechas calendario y clasificación de vencimientos
+│   │       └── subjects/            # Tipos y validación de materias
 │   ├── package.json                # Scripts y dependencias del frontend
 │   └── vite.config.ts              # Configuración de Vite
-└── tests/                          # Pruebas del proyecto
-    └── unit/domain/
+└── tests/
+    ├── setup.test.tsx               # Verificación básica del entorno de pruebas
+    └── unit/domain/                 # Pruebas de dominio
 ```
 
 El paquete ejecutable y sus comandos npm están en `studyflow/`. Las pruebas están en `tests/` en la raíz y Vitest está configurado para encontrarlas allí.
@@ -108,17 +114,17 @@ npm test -- tests/unit/domain/subjects.test.ts
 
 ## Estado del desarrollo
 
-Este resumen corresponde al **24 de octubre de 2026**. Es una fotografía del estado al redactarse; [`tasks.md`](specs/001-studyflow/tasks.md) contiene el progreso actualizado. En ese estado, T1–T4 están marcadas como completadas y T5–T42 siguen pendientes. El estado de una tarea no significa que todas las funcionalidades relacionadas ya estén integradas: algunas tareas completadas escriben pruebas, antes de que exista la implementación prevista en una tarea posterior.
+La lógica de dominio implementada incluye validación de nombres de materias, validación de fechas gregorianas y clasificación de vencimientos, además de tipos y validación de actividades. Estas piezas no equivalen a funcionalidades completas disponibles para el estudiante.
 
 | Área | Estado actual |
 | --- | --- |
-| Base React + TypeScript + Vite y entorno de pruebas | Configurados en T1. |
-| Validación de nombres de materias | Implementada en T3; las pruebas correspondientes se escribieron en T2. El alta, consulta y persistencia de materias aún están pendientes. |
-| Fechas y vencimientos | Las pruebas de T4 están escritas. La lógica de fechas y vencimiento corresponde a T5 y sigue pendiente; por ello, la funcionalidad todavía no está implementada. |
-| Actividades, estados, filtros y operaciones de almacenamiento | Pendientes en las tareas posteriores. |
-| Persistencia local con IndexedDB | Aprobada en el PLAN; la implementación sigue pendiente. |
+| Base del frontend y entorno de desarrollo | React, TypeScript, Vite y Vitest están configurados. |
+| Lógica de dominio | Hay módulos para validar materias y actividades, validar fechas y clasificar vencimientos. |
+| Interfaz y flujos de uso | Aún no están implementados como funcionalidades completas; la interfaz actual es solo un esqueleto. |
+| Persistencia | IndexedDB está aprobada como almacenamiento local, pero su integración todavía está en desarrollo. |
+| Gestión completa de materias y actividades | Alta y consulta de materias, operaciones integradas de actividades, cambios de estado, filtros y ordenación aún requieren implementación e integración. |
 
-No hay cuentas, almacenamiento remoto ni sincronización entre dispositivos. Las pruebas de T4 se descubrieron, pero fallaron al ejecutarse porque los módulos de fecha y clasificación de T5 aún no existen; no se presentan como verificación funcional satisfactoria.
+No hay cuentas, almacenamiento remoto ni sincronización entre dispositivos. Los resultados de verificación y pruebas deben consultarse en las ejecuciones correspondientes; este README no mantiene resultados numéricos que puedan quedar desactualizados. Para conocer el progreso vigente de cada tarea, consulta [`specs/001-studyflow/tasks.md`](specs/001-studyflow/tasks.md), la fuente oficial de seguimiento de tareas.
 
 ## Verificación y trazabilidad
 
