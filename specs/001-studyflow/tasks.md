@@ -1,8 +1,8 @@
 # Tareas de implementación de StudyFlow
 
-Estado: **IMPLEMENTATION autorizada hasta T4**. T1–T4 están completadas; T5–T42 permanecen pendientes. La autorización actual no incluye tareas posteriores.
+Estado: **IMPLEMENTATION autorizada únicamente para T43 en la última autorización**. T1–T4 y T43 están completadas; T5–T42, T44 y T45 permanecen pendientes. La autorización para T43 no habilita otras tareas.
 
-Las tareas siguen el orden de dependencia y estiman 20–30 minutos cada una. Para cada comportamiento nuevo, primero se escriben sus pruebas y después se implementa.
+Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias, no solo por el número del identificador: las adaptaciones T43–T45 indicadas tras T4 deben completarse antes de T5 y de las tareas funcionales que dependen de esas reglas. Para cada comportamiento nuevo, primero se escriben sus pruebas y después se implementa.
 
 ## 1. Base del proyecto y dominio
 
@@ -34,26 +34,47 @@ Las tareas siguen el orden de dependencia y estiman 20–30 minutos cada una. Pa
   - **RF/CA relacionados:** RF-10, RF-16–RF-17, RF-23–RF-26; CA-08, CA-12–CA-15.
   - **Hecho cuando:** las pruebas cubren fecha válida/imposible, ayer, hoy, hoy+3, hoy+4, cambio de mes/año, estado completado y fecha local sin conversión UTC; además consultan la misma fecha de entrega con dos valores de «hoy» locales en meses/años distintos, verifican la reclasificación y que la fecha de entrega de entrada permanece idéntica.
 
+- [x] **T43 — Adaptar pruebas de validación de materias a grafemas y Unicode (25 min)**
+  - **Objetivo:** ampliar las pruebas históricas de T2 para fijar los límites aprobados de grafemas y la equivalencia con espacios en blanco Unicode exteriores.
+  - **Archivos/módulos:** `tests/unit/domain/subjects.test.ts`.
+  - **Dependencias:** T2, T3.
+  - **RF/CA relacionados:** RF-03–RF-04; CA-02.
+  - **Hecho cuando:** las pruebas nuevas verifican 100/101 grafemas (incluidos grafemas compuestos), nombre formado solo por Unicode `White_Space`, espacios Unicode exteriores, comparación que ignora caja pero distingue acentos y espacios interiores, y conservación del nombre original; las pruebas anteriores se mantienen.
+
+- [ ] **T44 — Adaptar implementación de validación de materias (25 min)**
+  - **Objetivo:** ajustar la validación y clave de comparación de T3 a grafemas y Unicode `White_Space` sin cambiar el nombre presentado.
+  - **Archivos/módulos:** `studyflow/src/domain/subjects/validation.ts`, `studyflow/src/domain/subjects/types.ts`.
+  - **Dependencias:** T43.
+  - **RF/CA relacionados:** RF-03–RF-04; CA-02.
+  - **Hecho cuando:** pasan las pruebas de T2 y T43; el límite cuenta grafemas, la clave solo recorta espacios Unicode exteriores y normaliza mayúsculas, sin retirar acentos ni modificar espacios interiores o el texto original.
+
+- [ ] **T45 — Adaptar pruebas de calendario gregoriano (20 min)**
+  - **Objetivo:** ampliar las pruebas de T4 con fechas bisiestas y reglas de años seculares.
+  - **Archivos/módulos:** `tests/unit/domain/due-dates.test.ts`.
+  - **Dependencias:** T4.
+  - **RF/CA relacionados:** RF-10; CA-04.
+  - **Hecho cuando:** las pruebas aceptan 29 de febrero de 2000, rechazan 29 de febrero de 1900 y comprueban al menos un año secular divisible por 400 y otro no divisible por 400; se conservan los casos ya escritos en T4.
+
 - [ ] **T5 — Implementar funciones de fechas y vencimiento (25 min)**
   - **Objetivo:** implementar funciones puras de validación, fecha local y clasificación según T4.
-  - **Archivos/módulos:** `studyflow/src/domain/due-dates/date-only.ts`, `studyflow/src/domain/due-dates/classify.ts`.
-  - **Dependencias:** T4.
+  - **Archivos/módulos:** `studyflow/src/domain/dates/date-only.ts`, `studyflow/src/domain/dates/classify.ts`.
+  - **Dependencias:** T4, T45.
   - **RF/CA relacionados:** RF-10, RF-16–RF-17, RF-23–RF-26; CA-08, CA-12–CA-15.
-  - **Hecho cuando:** pasan las pruebas T4 y la clasificación se calcula al consultar sin guardarse como dato persistido.
+  - **Hecho cuando:** pasan las pruebas T4 y T45; la validación aplica las reglas gregorianas seculares, y la clasificación se calcula al consultar sin guardarse como dato persistido.
 
 - [ ] **T6 — Escribir pruebas de validación de actividades (25 min)**
-  - **Objetivo:** fijar validación de campos obligatorios, longitud, tipos y estado inicial.
+  - **Objetivo:** fijar validación de campos obligatorios, límite de grafemas, descripción opcional, tipos y estado inicial.
   - **Archivos/módulos:** `tests/unit/domain/activities.test.ts`.
-  - **Dependencias:** T1, T3, T5.
+  - **Dependencias:** T1, T5, T44.
   - **RF/CA relacionados:** RF-07–RF-11, RF-15–RF-17; CA-03–CA-05, CA-07–CA-08, CA-16.
-  - **Hecho cuando:** las pruebas cubren campos requeridos, título vacío/de solo espacios, 100/101 caracteres, descripción opcional, materia existente, tipos permitidos, títulos repetidos y estado pendiente inicial.
+  - **Hecho cuando:** las pruebas cubren campos requeridos, título vacío/de solo espacios, 100/101 grafemas, descripción ausente/vacía/solo Unicode `White_Space`, contenido largo conservado, materia existente, tipos permitidos, títulos repetidos y estado pendiente inicial.
 
 - [ ] **T7 — Implementar validación de actividades (20 min)**
-  - **Objetivo:** implementar tipos y validadores de actividad definidos por T6.
+  - **Objetivo:** implementar tipos y validadores de actividad, incluido el conteo de grafemas y el tratamiento de descripciones omitidas, definidos por T6.
   - **Archivos/módulos:** `studyflow/src/domain/activities/types.ts`, `studyflow/src/domain/activities/validation.ts`.
   - **Dependencias:** T6.
   - **RF/CA relacionados:** RF-07–RF-11, RF-15–RF-17; CA-03–CA-05, CA-07–CA-08, CA-16.
-  - **Hecho cuando:** pasan las pruebas T6, no hay unicidad para títulos y toda actividad nueva recibe estado `pendiente`.
+  - **Hecho cuando:** pasan las pruebas T6, los límites cuentan grafemas, las descripciones vacías o solo Unicode `White_Space` se tratan como omitidas, no hay unicidad para títulos y toda actividad nueva recibe estado `pendiente`.
 
 ## 2. IndexedDB y repositorios
 
@@ -74,14 +95,14 @@ Las tareas siguen el orden de dependencia y estiman 20–30 minutos cada una. Pa
 - [ ] **T10 — Escribir pruebas de alta y consulta de materias en repositorio (20 min)**
   - **Objetivo:** especificar alta, consulta, persistencia y rechazo de nombres equivalentes.
   - **Archivos/módulos:** `tests/integration/persistence/subjects-repository.test.ts`.
-  - **Dependencias:** T3, T9.
+  - **Dependencias:** T9, T44.
   - **RF/CA relacionados:** RF-01–RF-06; CA-01–CA-02.
-  - **Hecho cuando:** se prueban alta, consulta tras reabrir la base, rechazo de equivalente y ausencia de operaciones de edición/eliminación.
+  - **Hecho cuando:** se prueban alta, consulta tras reabrir la base, rechazo de equivalentes con caja/espacios Unicode exteriores y ausencia de operaciones de edición/eliminación.
 
 - [ ] **T11 — Implementar repositorio de materias (20 min)**
   - **Objetivo:** implementar alta y consulta local de materias conforme a T10.
   - **Archivos/módulos:** `studyflow/src/persistence/subjects/subjects-repository.ts`.
-  - **Dependencias:** T10.
+  - **Dependencias:** T10, T44.
   - **RF/CA relacionados:** RF-01–RF-06; CA-01–CA-02.
   - **Hecho cuando:** pasan las pruebas T10 y rechazar un duplicado conserva el registro existente.
 
@@ -90,14 +111,14 @@ Las tareas siguen el orden de dependencia y estiman 20–30 minutos cada una. Pa
   - **Archivos/módulos:** `tests/integration/persistence/activities-repository.test.ts`.
   - **Dependencias:** T7, T9, T11.
   - **RF/CA relacionados:** RF-01–RF-02, RF-07, RF-11; CA-01, CA-03, CA-05.
-  - **Hecho cuando:** se prueban alta y lectura tras reabrir la base, títulos iguales como registros independientes, estado inicial pendiente y rechazo de materia inexistente.
+  - **Hecho cuando:** se prueban alta y lectura tras reabrir la base, títulos iguales como registros independientes, estado inicial pendiente, descripción omitida y contenido conservado, y rechazo de materia inexistente.
 
 - [ ] **T13 — Implementar creación y consulta de actividades en repositorio (25 min)**
   - **Objetivo:** implementar las operaciones de alta y consulta local definidas por T12.
   - **Archivos/módulos:** `studyflow/src/persistence/activities/activities-repository.ts`.
   - **Dependencias:** T12.
   - **RF/CA relacionados:** RF-01–RF-02, RF-07, RF-11; CA-01, CA-03, CA-05.
-  - **Hecho cuando:** pasan las pruebas T12 y no se pueden guardar actividades sin una materia existente.
+  - **Hecho cuando:** pasan las pruebas T12, se conservan los campos y la descripción conforme a T7, y no se pueden guardar actividades sin una materia existente.
 
 - [ ] **T14 — Escribir pruebas de edición y eliminación en repositorio (20 min)**
   - **Objetivo:** especificar actualización y borrado individual por identificador.
@@ -128,76 +149,76 @@ Las tareas siguen el orden de dependencia y estiman 20–30 minutos cada una. Pa
   - **Hecho cuando:** pasan las pruebas T16 y el cambio de estado persiste al reabrir IndexedDB conservando los demás datos de la actividad.
 
 - [ ] **T18 — Escribir pruebas de fallos de almacenamiento (20 min)**
-  - **Objetivo:** especificar los resultados de apertura, cuota o transacción fallida sin pérdida intencional de datos.
+  - **Objetivo:** especificar la comunicación de fallos de apertura, cuota o transacción sin afirmar un estado de persistencia no verificado.
   - **Archivos/módulos:** `tests/integration/persistence/storage-errors.test.ts`.
   - **Dependencias:** T9, T11, T13, T15, T17.
   - **RF/CA relacionados:** RF-27; CA-18.
-  - **Hecho cuando:** fallos controlados no comunican éxito ni provocan borrado/reemplazo de la base, y los datos previos siguen consultables cuando el almacén permanece disponible.
+  - **Hecho cuando:** fallos controlados comunican que la operación no pudo confirmarse o completarse, no comunican éxito ni detalles técnicos, y no provocan borrado/reemplazo intencional de datos existentes; las pruebas no afirman un estado de escritura que no se haya verificado.
 
 - [ ] **T19 — Implementar manejo de fallos IndexedDB (20 min)**
-  - **Objetivo:** normalizar errores locales sin ocultarlos ni intentar reinicializar o borrar datos.
+  - **Objetivo:** distinguir fallos de IndexedDB de errores de validación, sin ocultar el fallo ni intentar reinicializar o borrar datos.
   - **Archivos/módulos:** `studyflow/src/persistence/database/storage-errors.ts`, adaptadores de `studyflow/src/persistence/`.
   - **Dependencias:** T18.
   - **RF/CA relacionados:** RF-27; CA-18.
-  - **Hecho cuando:** pasan las pruebas T18 y los fallos llegan a la interfaz en un estado distinguible. La recuperación manual sigue abierta en DA-01.
+  - **Hecho cuando:** pasan las pruebas T18 y los fallos llegan a la interfaz con un resultado distinto al de validación, sin garantizar éxito ni fracaso de persistencia no verificado. La recuperación sigue abierta en DA-01.
 
 ## 3. Interfaz, consulta y gestión de actividades
 
 - [ ] **T20 — Escribir pruebas de interfaz de materias (20 min)**
   - **Objetivo:** probar registro, consulta, validación y duplicidad desde la interfaz.
   - **Archivos/módulos:** `tests/component/subjects/subjects-view.test.tsx`.
-  - **Dependencias:** T3, T11.
+  - **Dependencias:** T11, T44.
   - **RF/CA relacionados:** RF-03–RF-06; CA-02.
-  - **Hecho cuando:** las pruebas verifican alta válida, mensaje ante nombre inválido/equivalente, visualización y ausencia de edición/borrado.
+  - **Hecho cuando:** las pruebas verifican alta válida, límite por grafemas, mensaje ante nombre vacío/de solo Unicode `White_Space` o equivalente con caja/espacios exteriores, conservación del nombre presentado, visualización y ausencia de edición/borrado.
 
 - [ ] **T21 — Implementar interfaz de materias (20 min)**
   - **Objetivo:** construir formulario de alta y lista conectados al repositorio.
   - **Archivos/módulos:** `studyflow/src/features/subjects/subjects-view.tsx`, `studyflow/src/features/subjects/subject-form.tsx`.
-  - **Dependencias:** T20.
+  - **Dependencias:** T20, T44.
   - **RF/CA relacionados:** RF-03–RF-06; CA-02.
   - **Hecho cuando:** pasan las pruebas T20 y la interfaz ofrece únicamente crear y consultar materias.
 
 - [ ] **T22 — Escribir pruebas de creación de actividades en la interfaz (20 min)**
   - **Objetivo:** probar los campos y validaciones del formulario de alta, incluido estado inicial y fechas pasadas.
   - **Archivos/módulos:** `tests/component/activities/activity-form.test.tsx`.
-  - **Dependencias:** T5, T7, T11, T13, T15.
+  - **Dependencias:** T5, T7, T11, T13.
   - **RF/CA relacionados:** RF-07–RF-11, RF-15–RF-17; CA-03–CA-05, CA-07–CA-08, CA-16.
-  - **Hecho cuando:** las pruebas de alta cubren campos obligatorios, errores por campo, tipo/fecha inválidos, título límite, descripción opcional, títulos repetidos y estado inicial pendiente.
+  - **Hecho cuando:** las pruebas de alta cubren campos obligatorios, errores por campo, tipo/fecha gregoriana inválidos, título de 100/101 grafemas, descripción ausente/vacía/Unicode `White_Space` y contenido conservado, títulos repetidos y estado inicial pendiente.
 
 - [ ] **T23 — Implementar formulario de creación de actividades (20 min)**
   - **Objetivo:** construir el formulario de alta conectado a validadores y repositorio.
   - **Archivos/módulos:** `studyflow/src/features/activities/activity-form.tsx`.
   - **Dependencias:** T22.
   - **RF/CA relacionados:** RF-07–RF-11, RF-15–RF-17; CA-03–CA-05, CA-07–CA-08, CA-16.
-  - **Hecho cuando:** pasan las pruebas T22 y una creación inválida no se guarda.
+  - **Hecho cuando:** pasan las pruebas T22; los campos inválidos no se guardan y las descripciones omitidas o de solo Unicode `White_Space` se guardan como omitidas.
 
 - [ ] **T24 — Escribir pruebas de edición de actividades en la interfaz (20 min)**
   - **Objetivo:** fijar que se pueden editar los campos aprobados y que la validación impide guardar cambios inválidos.
   - **Archivos/módulos:** `tests/component/activities/activity-edit.test.tsx`.
   - **Dependencias:** T23, T15.
   - **RF/CA relacionados:** RF-08, RF-10, RF-12; CA-04–CA-06, CA-16.
-  - **Hecho cuando:** las pruebas cubren cambios de título, tipo, materia, fecha y descripción, rechazan datos inválidos y comprueban que una actividad homónima no cambia.
+  - **Hecho cuando:** las pruebas cubren cambios de título (incluido límite por grafemas), tipo, materia, fecha gregoriana y descripción; una descripción vacía o solo Unicode `White_Space` queda omitida y el contenido se conserva sin límite adicional; se rechazan datos inválidos, una edición inválida conserva los datos anteriores y una actividad homónima no cambia.
 
 - [ ] **T25 — Implementar edición de actividades en la interfaz (20 min)**
   - **Objetivo:** conectar la edición de los campos aprobados con el repositorio y los validadores existentes.
   - **Archivos/módulos:** `studyflow/src/features/activities/activity-form.tsx`.
   - **Dependencias:** T24.
   - **RF/CA relacionados:** RF-08, RF-10, RF-12; CA-04–CA-06, CA-16.
-  - **Hecho cuando:** pasan las pruebas T24 y los cambios válidos se guardan solo para la actividad seleccionada.
+  - **Hecho cuando:** pasan las pruebas T24; una edición válida actualiza solo la actividad seleccionada, una descripción vacía o solo Unicode `White_Space` queda omitida y el contenido se conserva sin límite adicional; una validación fallida informa que no se guardó y deja los datos previos intactos.
 
-- [ ] **T26 — Escribir pruebas de consulta, filtros, vencimientos y orden (25 min)**
+- [ ] **T26 — Escribir pruebas de consulta, filtros, vencimientos y orden (30 min)**
   - **Objetivo:** fijar las reglas de consulta en memoria independientes de la presentación.
   - **Archivos/módulos:** `tests/unit/domain/activity-query.test.ts`.
   - **Dependencias:** T5, T7.
   - **RF/CA relacionados:** RF-19–RF-26; CA-09–CA-15, CA-17.
-  - **Hecho cuando:** los casos verifican filtros AND, categorías de vencimiento, exclusión de completadas, límites temporales y orden fecha/título/ID, incluidos cambios de mes/año.
+  - **Hecho cuando:** los casos verifican filtros AND y «Todos», las tres categorías de vencimiento para pendientes, exclusión de completadas, límites temporales, día 14 en «Posteriores a tres días», y orden fecha/título alfabético español sensible a acentos/insensible a mayúsculas/ID, incluidos cambios de mes y año.
 
-- [ ] **T27 — Implementar consulta, filtros y orden (25 min)**
+- [ ] **T27 — Implementar consulta, filtros y orden (30 min)**
   - **Objetivo:** implementar clasificación, filtros combinados y orden determinista según T26.
-  - **Archivos/módulos:** `studyflow/src/domain/activities/query.ts`.
+  - **Archivos/módulos:** `studyflow/src/domain/queries/activity-query.ts`.
   - **Dependencias:** T26.
   - **RF/CA relacionados:** RF-19–RF-26; CA-09–CA-15, CA-17.
-  - **Hecho cuando:** pasan las pruebas T26 y no se persiste la clasificación ni se añade paginación.
+  - **Hecho cuando:** pasan las pruebas T26; los filtros activos se combinan con AND, «Todos» desactiva solo el filtro de vencimiento, se respeta la colación española con ID estable, y no se persiste la clasificación ni se añade paginación.
 
 - [ ] **T28 — Escribir pruebas de presentación de la lista (20 min)**
   - **Objetivo:** probar que la interfaz presenta las actividades y controles de filtros con el orden recibido.
@@ -242,18 +263,18 @@ Las tareas siguen el orden de dependencia y estiman 20–30 minutos cada una. Pa
   - **Hecho cuando:** pasan las pruebas T32; cancelar no modifica IndexedDB y confirmar elimina únicamente el ID seleccionado, sin función de deshacer.
 
 - [ ] **T34 — Escribir pruebas de presentación de errores locales (20 min)**
-  - **Objetivo:** probar mensajes de validación y fallos de almacenamiento sin perder el estado del formulario.
+  - **Objetivo:** probar mensajes distintos de validación y almacenamiento, sin afirmar un resultado de persistencia no confirmado.
   - **Archivos/módulos:** `tests/component/shared/storage-error.test.tsx`.
   - **Dependencias:** T19, T21, T23, T25.
   - **RF/CA relacionados:** RF-27; CA-18.
-  - **Hecho cuando:** los escenarios verifican error claro, ausencia de confirmación falsa de guardado y conservación del formulario.
+  - **Hecho cuando:** los escenarios distinguen «operación no guardada» por validación de «no pudo confirmarse o completarse» por almacenamiento, validan que el error de almacenamiento no muestre detalles técnicos ni un resultado no verificado y no comunica éxito; no se exige que un fallo de almacenamiento garantice el estado del formulario o del registro.
 
 - [ ] **T35 — Implementar presentación de errores locales (20 min)**
-  - **Objetivo:** presentar fallos de persistencia y validación con mensajes comprensibles.
+  - **Objetivo:** presentar fallos de persistencia y validación con mensajes distintos, comprensibles y sin detalles técnicos.
   - **Archivos/módulos:** `studyflow/src/shared/error-message.tsx`, integración con formularios y vistas.
   - **Dependencias:** T34.
   - **RF/CA relacionados:** RF-27; CA-18.
-  - **Hecho cuando:** pasan las pruebas T34 y el mensaje no promete recuperación automática no aprobada por DA-01.
+  - **Hecho cuando:** pasan las pruebas T34; la validación informa que no se guardó y conserva datos previos en edición, mientras el error de almacenamiento informa que no pudo confirmarse o completarse sin garantizar un estado no verificado ni prometer recuperación automática (DA-01).
 
 ## 4. Integración y verificación
 
@@ -311,8 +332,8 @@ Las tareas siguen el orden de dependencia y estiman 20–30 minutos cada una. Pa
 | RF | Tareas | CA cubiertos |
 | --- | --- | --- |
 | RF-01–RF-02 | T8–T9, T10–T13, T16–T17, T36–T38 | CA-01, CA-07, CA-15 |
-| RF-03–RF-06 | T2–T3, T10–T11, T20–T21 | CA-02 |
-| RF-07–RF-10 | T6–T7, T12–T13, T22–T25 | CA-03–CA-04, CA-08, CA-16 |
+| RF-03–RF-06 | T2–T3, T10–T11, T20–T21, T43–T44 | CA-02 |
+| RF-07–RF-10 | T6–T7, T12–T13, T22–T25, T45 | CA-03–CA-04, CA-08, CA-16 |
 | RF-11 | T6–T7, T12–T13 | CA-05, CA-16 |
 | RF-12 | T14–T15, T24–T25 | CA-04–CA-06, CA-16 |
 | RF-13 | T14–T15, T32–T33 | CA-05–CA-06 |
