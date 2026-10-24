@@ -55,7 +55,7 @@ Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias
   - **RF/CA relacionados:** RF-10; CA-04.
   - **Hecho cuando:** las pruebas aceptan 29 de febrero de 2000, rechazan 29 de febrero de 1900 y comprueban al menos un año secular divisible por 400 y otro no divisible por 400; se conservan los casos ya escritos en T4.
 
-- [ ] **T5 — Implementar funciones de fechas y vencimiento (25 min)**
+- [x] **T5 — Implementar funciones de fechas y vencimiento (25 min)**
   - **Objetivo:** implementar funciones puras de validación, fecha local y clasificación según T4.
   - **Archivos/módulos:** `studyflow/src/domain/dates/date-only.ts`, `studyflow/src/domain/dates/classify.ts`.
   - **Dependencias:** T4, T45.
