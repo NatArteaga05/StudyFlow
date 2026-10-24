@@ -4,6 +4,8 @@ StudyFlow es una aplicación web en desarrollo para que estudiantes universitari
 
 El almacenamiento previsto es local al navegador y al perfil/origen donde se utiliza la aplicación. No hay cuentas ni sincronización entre dispositivos; los datos no estarán disponibles automáticamente en otro navegador o dispositivo.
 
+Cuando se implemente, IndexedDB conservará los datos en el almacenamiento del sitio. Si se eliminan los datos del sitio o el perfil del navegador, esos datos locales pueden perderse.
+
 ## Alcance del MVP
 
 La SPEC aprobada define que el MVP permitirá:
@@ -31,20 +33,20 @@ React, TypeScript y Vite están configurados. IndexedDB es la persistencia aprob
 
 ## Desarrollo guiado por especificaciones (SDD)
 
-Spec-Driven Development (SDD) organiza el desarrollo alrededor de especificaciones aprobadas. En StudyFlow, la SPEC define qué debe hacer el producto; el PLAN describe cómo implementarlo; y TASKS divide ese diseño en trabajo concreto. Esto mantiene la trazabilidad y evita convertir supuestos técnicos o dudas en nuevas reglas de negocio.
+Spec-Driven Development (SDD) organiza el desarrollo alrededor de especificaciones aprobadas. En StudyFlow, la [SPEC](specs/001-studyflow/spec.md) define qué debe hacer el producto; el [PLAN](specs/001-studyflow/plan.md) describe cómo implementarlo; y [TASKS](specs/001-studyflow/tasks.md) divide ese diseño en trabajo concreto. La [Constitución](docs/constitution.md) establece los principios, y [`AGENTS.md`](AGENTS.md) reúne las instrucciones de trabajo. Esto mantiene la trazabilidad y evita convertir supuestos técnicos o dudas en nuevas reglas de negocio.
 
 Las fases avanzan en este orden y requieren aprobación antes de pasar a la siguiente:
 
 | Fase | Propósito |
 | --- | --- |
-| **CONSTITUTION** | Definir los principios y reglas del proyecto y del proceso. |
-| **SPEC** | Definir y aprobar usuarios, comportamiento, requisitos y criterios de aceptación. |
-| **PLAN** | Diseñar la arquitectura y la implementación a partir de la SPEC aprobada. |
-| **TASKS** | Dividir el PLAN aprobado en tareas pequeñas, ordenadas y verificables. |
+| **CONSTITUTION** | Definir los principios y reglas en [`docs/constitution.md`](docs/constitution.md). |
+| **SPEC** | Definir y aprobar usuarios, comportamiento, requisitos y criterios de aceptación en [`specs/001-studyflow/spec.md`](specs/001-studyflow/spec.md). |
+| **PLAN** | Diseñar la arquitectura y la implementación a partir de la SPEC aprobada en [`specs/001-studyflow/plan.md`](specs/001-studyflow/plan.md). |
+| **TASKS** | Dividir el PLAN aprobado en tareas pequeñas, ordenadas y verificables en [`specs/001-studyflow/tasks.md`](specs/001-studyflow/tasks.md). |
 | **IMPLEMENTATION** | Ejecutar solo las tareas autorizadas; escribir primero las pruebas de cada tarea y después su implementación. |
 | **VERIFICATION** | Comprobar requisitos y criterios de aceptación, y registrar los resultados reales de pruebas y verificaciones. |
 
-Los cambios de comportamiento comienzan por la SPEC. Las dudas abiertas no se convierten en requisitos sin aprobación.
+Los cambios de comportamiento comienzan por la SPEC. Las dudas abiertas no se convierten en requisitos sin aprobación. El historial de decisiones está en [`clarificaciones.md`](specs/001-studyflow/clarificaciones.md), y la guía del flujo en [`specs/README.md`](specs/README.md).
 
 ## Estructura del repositorio
 
@@ -78,6 +80,11 @@ Antes de iniciar cualquier tarea, el agente comprueba en `specs/001-studyflow/ta
 
 ## Instalación y ejecución
 
+### Requisitos previos
+
+- **Node.js:** 20.x, 22.x o 24 o posterior. El Vitest fijado en el lockfile declara compatibilidad con Node.js `^20.0.0 || ^22.0.0 || >=24.0.0`; Vite 6.4.5 también es compatible con esos rangos. Se recomienda usar una versión LTS dentro de los rangos compatibles. [Requisitos de Vitest 4](https://v4.vitest.dev/guide/migration.html) · [Compatibilidad de Node.js de Vite 6](https://vite.dev/blog/announcing-vite6)
+- **npm:** 7 o posterior. El lockfile del proyecto usa formato versión 3, admitido por npm 7 y posteriores. [Documentación de `package-lock.json`](https://docs.npmjs.com/cli/v9/configuring-npm/package-lock-json)
+
 Ejecuta estos comandos desde la raíz del repositorio. La instalación usa el lockfile existente:
 
 ```sh
@@ -101,7 +108,7 @@ npm test -- tests/unit/domain/subjects.test.ts
 
 ## Estado del desarrollo
 
-Según `specs/001-studyflow/tasks.md`, T1–T4 están marcadas como completadas y T5–T42 siguen pendientes. El estado de una tarea no significa que todas las funcionalidades relacionadas ya estén integradas: algunas tareas completadas escriben pruebas, antes de que exista la implementación prevista en una tarea posterior.
+Este resumen corresponde al **24 de octubre de 2026**. Es una fotografía del estado al redactarse; [`tasks.md`](specs/001-studyflow/tasks.md) contiene el progreso actualizado. En ese estado, T1–T4 están marcadas como completadas y T5–T42 siguen pendientes. El estado de una tarea no significa que todas las funcionalidades relacionadas ya estén integradas: algunas tareas completadas escriben pruebas, antes de que exista la implementación prevista en una tarea posterior.
 
 | Área | Estado actual |
 | --- | --- |
@@ -117,10 +124,10 @@ No hay cuentas, almacenamiento remoto ni sincronización entre dispositivos. Las
 
 La verificación sigue la cadena **SPEC → PLAN → TASKS → pruebas y resultados**:
 
-1. Los requisitos funcionales `RF-*` y criterios de aceptación `CA-*` están identificados en `spec.md`.
-2. `plan.md` relaciona esos requisitos con componentes, datos y decisiones técnicas.
-3. Cada tarea indica sus dependencias, requisitos y criterios relacionados, además de una condición objetiva de finalización.
+1. Los requisitos funcionales `RF-*` y criterios de aceptación `CA-*` están identificados en [`spec.md`](specs/001-studyflow/spec.md).
+2. [`plan.md`](specs/001-studyflow/plan.md) relaciona esos requisitos con componentes, datos y decisiones técnicas.
+3. Cada tarea en [`tasks.md`](specs/001-studyflow/tasks.md) indica sus dependencias, requisitos y criterios relacionados, además de una condición objetiva de finalización.
 4. Las pruebas unitarias, de integración y de interfaz se vinculan a las tareas que cubren. Durante IMPLEMENTATION se escriben antes del código correspondiente.
 5. La verificación final registra qué criterios pasaron, cuáles fallaron y qué evidencia los cubre; una prueba fallida no se reporta como conforme.
 
-La matriz de trazabilidad de `tasks.md` permite comprobar la cobertura de RF-01–RF-27 y CA-01–CA-19. Las dudas DA-01, DA-02 y DA-03 permanecen documentadas en la SPEC y no se resuelven por suposición.
+La matriz de trazabilidad de [`tasks.md`](specs/001-studyflow/tasks.md) permite comprobar la cobertura de RF-01–RF-27 y CA-01–CA-19. Las dudas DA-01, DA-02 y DA-03 permanecen documentadas en la SPEC y no se resuelven por suposición.
