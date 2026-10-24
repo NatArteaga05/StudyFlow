@@ -1,6 +1,6 @@
 # Tareas de implementación de StudyFlow
 
-Estado: **IMPLEMENTATION autorizada únicamente para T43 en la última autorización**. T1–T4 y T43 están completadas; T5–T42, T44 y T45 permanecen pendientes. La autorización para T43 no habilita otras tareas.
+Estado: **IMPLEMENTATION autorizada únicamente para T44 en la última autorización**. T1–T4 y T43–T44 están completadas; T5–T42 y T45 permanecen pendientes. La autorización para T44 no habilita otras tareas.
 
 Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias, no solo por el número del identificador: las adaptaciones T43–T45 indicadas tras T4 deben completarse antes de T5 y de las tareas funcionales que dependen de esas reglas. Para cada comportamiento nuevo, primero se escriben sus pruebas y después se implementa.
 
@@ -41,7 +41,7 @@ Las tareas estiman 20–30 minutos cada una. Se ejecutan según sus dependencias
   - **RF/CA relacionados:** RF-03–RF-04; CA-02.
   - **Hecho cuando:** las pruebas nuevas verifican 100/101 grafemas (incluidos grafemas compuestos), nombre formado solo por Unicode `White_Space`, espacios Unicode exteriores, comparación que ignora caja pero distingue acentos y espacios interiores, y conservación del nombre original; las pruebas anteriores se mantienen.
 
-- [ ] **T44 — Adaptar implementación de validación de materias (25 min)**
+- [x] **T44 — Adaptar implementación de validación de materias (25 min)**
   - **Objetivo:** ajustar la validación y clave de comparación de T3 a grafemas y Unicode `White_Space` sin cambiar el nombre presentado.
   - **Archivos/módulos:** `studyflow/src/domain/subjects/validation.ts`, `studyflow/src/domain/subjects/types.ts`.
   - **Dependencias:** T43.

@@ -1,7 +1,18 @@
+const graphemeSegmenter = new Intl.Segmenter("es", { granularity: "grapheme" });
+const unicodeWhitespaceAtEdges = /^\p{White_Space}+|\p{White_Space}+$/gu;
+
+function trimUnicodeWhitespace(value: string): string {
+  return value.replace(unicodeWhitespaceAtEdges, "");
+}
+
+function countGraphemes(value: string): number {
+  return Array.from(graphemeSegmenter.segment(value)).length;
+}
+
 export function isValidSubjectName(name: string): boolean {
-  return name.trim().length > 0 && name.length <= 100;
+  return trimUnicodeWhitespace(name).length > 0 && countGraphemes(name) <= 100;
 }
 
 export function normalizeSubjectName(name: string): string {
-  return name.trim().toLowerCase();
+  return trimUnicodeWhitespace(name).toLowerCase();
 }
